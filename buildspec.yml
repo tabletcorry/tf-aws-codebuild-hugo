@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  variables:
+    HUGO_VERSION: "0.105.0"
+
+phases:
+  install:
+    commands:
+      - echo Entered the install phase...
+      - |
+        [[ -e hugo-$HUGO_VERSION ]] || wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-arm64.tar.gz
+      - |
+        [[ -e hugo-$HUGO_VERSION ]] || tar xaf hugo_extended_${HUGO_VERSION}_linux-arm64.tar.gz
+      - |
+        [[ -e hugo-$HUGO_VERSION ]] || mv hugo hugo-$HUGO_VERSION
+    finally:
+      - echo This always runs even if the update or install command fails
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+    finally:
+      - echo This always runs even if the login command fails
+  build:
+    commands:
+      - echo Entered the build phase...
+      - echo Build started on `date`
+      - ./hugo-$HUGO_VERSION --cleanDestinationDir
+    finally:
+      - echo This always runs even if the install command fails
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - ./hugo-$HUGO_VERSION deploy
+      - echo Build completed on `date`
+
+cache:
+  paths:
+    - hugo-*
+    - public/**/*
+    - resources/_gen/**/*
