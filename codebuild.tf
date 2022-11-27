@@ -28,6 +28,8 @@ resource "aws_codebuild_project" "self" {
     }
   }*/
 
+  badge_enabled = true
+
   source {
     type            = "GITHUB"
     location        = "https://github.com/tabletcorry/web_hugo.git"
